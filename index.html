@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <title>Link shortening</title>
+    <style>
+        body {
+            background: #f0f0f0;
+            text-align: center;
+            font-family: Arial, sans-serif;
+        }
+
+        h1 {
+            margin-top: 10%;
+            color: #333;
+        }
+
+        form {
+            margin: 20px auto;
+            width: 50%;
+            background: #fff;
+            padding: 20px;
+            border-radius: 5px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        input[type="text"] {
+            width: 100%;
+            padding: 10px;
+            font-size: 16px;
+            border: 1px solid #ccc;
+            border-radius: 5px;
+        }
+
+        button {
+            width: 100%;
+            padding: 10px;
+            background: #007BFF;
+            color: #fff;
+            border: none;
+            border-radius: 5px;
+            font-size: 16px;
+            cursor: pointer;
+        }
+
+            button:hover {
+                background: #0056b3;
+            }
+    </style>
+</head>
+<body>
+    <h1>Link shortening</h1>
+    <form action="/shorten" method="post">
+        <input type="text" name="original_link" required>
+        <button type="submit">Shorten the link</button>
+    </form>
+</body>
+</html>
