@@ -100,6 +100,8 @@ void rootsToFile(TreeNode* root, FILE* file) {
 void AADD(Array* array, char* value);
 void AREM(Array* array, int index);
 int AISMEMBER(Array* array, int index);
+char* AGET(Array* array, int index);
+void AOVERWRITE(Array* array, int index, char* value);
 
 // Односвязный список
 void SLLADD(SinglyLinkedList* singlyLinkedList, char* value);
@@ -129,7 +131,7 @@ char* QPOP(Queue* queue);
 void HSET(HashTable* hashtable, char* key, char* value);
 void HDEL(HashTable* hashtable, char* key);
 char* HGET(HashTable* hashtable, char* key);
-void TPRINT(TreeNode* root);
+void TPRINT(TreeNode* root, int level);
 
 // Бинарное дерево поиска
 TreeNode* TADD(TreeNode* root, int value);
@@ -297,6 +299,8 @@ void copyingValuesFromFile(FILE* file, Array* array, SinglyLinkedList* singlyLin
             // Lab_1 --file C:\newdata.txt --query AADD item            +
             // Lab_1 --file C:\newdata.txt --query AREM 5
             // Lab_1 --file C:\newdata.txt --query AISMEMBER 5
+            // Lab_1 --file C:\newdata.txt --query AGET 5
+            // Lab_1 --file C:\newdata.txt --query AOVERWRITE 5 item
             // 
             // Lab_1 --file C:\newdata.txt --query SLLADD item          +
             // Lab_1 --file C:\newdata.txt --query SLLPOP               +
@@ -450,6 +454,53 @@ int main(int argc, char* argv[]) {
         else {
             printf("FALSE\n");
         }
+    }
+    else if (strcmp(query, "AGET") == 0) {
+        copyingValuesFromFile(file, &array, &singlyLinkedList, &doublyLinkedList, &stack, &queue, &hashTable);
+        char line[128];
+        long binary_search_tree_pos = -1;
+        rewind(file);
+        while (fgets(line, sizeof(line), file) != NULL) {
+            if (strcmp(line, "BINARY SEARCH TREE:\n") == 0) {
+                binary_search_tree_pos = ftell(file);
+            }
+        }
+        rewind(file);
+
+        fseek(file, binary_search_tree_pos, SEEK_SET);
+        while (fgets(line, sizeof(line), file) != NULL) {
+            removeNewline(line);
+            removeNewline(line);
+            int current_value = atoi(line);
+            root = TADD(root, current_value);
+        }
+        fclose(file);
+        int index = atoi(argv[5]);
+        printf("%s\n", AGET(&array, index));
+    }
+    else if (strcmp(query, "AOVERWRITE") == 0) {
+        copyingValuesFromFile(file, &array, &singlyLinkedList, &doublyLinkedList, &stack, &queue, &hashTable);
+        char line[128];
+        long binary_search_tree_pos = -1;
+        rewind(file);
+        while (fgets(line, sizeof(line), file) != NULL) {
+            if (strcmp(line, "BINARY SEARCH TREE:\n") == 0) {
+                binary_search_tree_pos = ftell(file);
+            }
+        }
+        rewind(file);
+
+        fseek(file, binary_search_tree_pos, SEEK_SET);
+        while (fgets(line, sizeof(line), file) != NULL) {
+            removeNewline(line);
+            removeNewline(line);
+            int current_value = atoi(line);
+            root = TADD(root, current_value);
+        }
+        fclose(file);
+        int index = atoi(argv[5]);
+        AOVERWRITE(&array, index, argv[6]);
+        fileUpdate(file, filename, &array, &singlyLinkedList, &doublyLinkedList, &stack, &queue, &hashTable, root);
     }
     else if (strcmp(query, "SLLADD") == 0) {
         copyingValuesFromFile(file, &array, &singlyLinkedList, &doublyLinkedList, &stack, &queue, &hashTable);
@@ -1019,6 +1070,21 @@ int AISMEMBER(Array* array, int index) {
         return 0;
     }
     return 1;
+}
+
+char* AGET(Array* array, int index) {
+    if (index < 0 || index >= array->count) {
+        return NULL;
+    }
+    return array->elements[index];
+}
+
+void AOVERWRITE(Array* array, int index, char* value) {
+    if (index < 0 || index >= array->count) {
+        printf("The index is not within the array!\n");
+        return;
+    }
+    array->elements[index] = _strdup(value);
 }
 
 // Односвязный список
