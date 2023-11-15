@@ -1,14 +1,12 @@
 # -*- coding: utf-8 -*-
 from flask import Flask, render_template, request, redirect
-import pyshorteners as short
+import hashlib
+import urllib.parse  # Импортируем библиотеку для кодирования URL
 import socket
 
 app = Flask(__name__)
 
-# Создаем объект для сокращения ссылок
-s = short.Shortener()
-
-# Словарь для хранения сокращенных ссылок
+# Словарь для хранения соответствия между исходными и сокращенными ссылками
 shortened_links = {}
 
 # IP-адрес и порт сервера
@@ -32,25 +30,33 @@ def send_data_to_server(short_link, original_link):
     # Закрываем соединение с сервером
     client_socket.close()
 
-    return "The data has been successfully sent to the server."
+def shorten_link(original_link):
+    # Генерируем уникальный хэш от исходной ссылки
+    hash_object = hashlib.sha256(original_link.encode())
+    hash_value = hash_object.hexdigest()[:8]  # Используем первые 8 символов хэша
+
+    # Формируем сокращенную ссылку
+    shortened_link = f"http://localhost:5000/{urllib.parse.quote(hash_value)}"
+
+    # Сохраняем соответствие в словаре
+    shortened_links[urllib.parse.quote(hash_value)] = original_link
+    
+    # Отправляем данные на другой сервер через сокет
+    send_data_to_server(shortened_link, original_link)
+
+    return shortened_link
 
 @app.route('/')
-def Decor():
+def index():
     return render_template('index.html')
 
 @app.route('/shorten', methods=['POST'])
-def shorten_link():
+def shorten():
     if request.method == 'POST':
         original_link = request.form.get('original_link')
 
         # Сокращаем исходную ссылку
-        shortened_link = s.tinyurl.short(original_link)
-
-        # Сохраняем сокращенную ссылку в словаре
-        shortened_links[shortened_link] = original_link
-
-        # Отправляем данные на другой сервер через сокет
-        send_data_to_server(shortened_link, original_link)
+        shortened_link = shorten_link(original_link)
 
         return f"Shortened link: <a href='{shortened_link}'>{shortened_link}</a>"
 
