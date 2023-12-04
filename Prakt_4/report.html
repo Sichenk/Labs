@@ -1,1 +1,60 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report</title>
+    <style>
+        table {
+            border-collapse: collapse;
+            width: 100%;
+            margin-top: 20px;
+        }
 
+        table, th, td {
+            border: 1px solid black;
+        }
+
+        th, td {
+            padding: 10px;
+            text-align: left;
+        }
+    </style>
+</head>
+<body>
+    <h1>Report</h1>
+
+    <table>
+        <thead>
+            <tr>
+                {% if report_entries %}
+                {% for key in report_entries[0].keys() %}
+                {% if key not in ['Pid', 'Id'] %}
+                <th>{{ key }}</th>
+                {% endif %}
+                {% endfor %}
+                {% else %}
+                <th colspan="4">No data available</th>
+                {% endif %}
+            </tr>
+        </thead>
+        <tbody>
+            {% if report_entries %}
+            {% for entry in report_entries|sort(attribute='Count', reverse=true) %}
+            <tr>
+                {% for key, value in entry.items() %}
+                {% if key not in ['Pid', 'Id'] %}
+                <td>{{ value }}</td>
+                {% endif %}
+                {% endfor %}
+            </tr>
+            {% endfor %}
+            {% else %}
+            <tr>
+                <td colspan="4">No data available</td>
+            </tr>
+            {% endif %}
+        </tbody>
+    </table>
+</body>
+</html>

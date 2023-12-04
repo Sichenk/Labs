@@ -1,1 +1,137 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Statistics Page</title>
+    <style>
+        body {
+            font-family: 'Arial', sans-serif;
+            background-color: #f4f4f4;
+            color: #333;
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
 
+        h1 {
+            text-align: center;
+            color: #007bff;
+            margin-bottom: 30px;
+        }
+
+        form {
+            max-width: 400px;
+            margin: 0 auto;
+            background-color: #fff;
+            padding: 20px;
+            border-radius: 8px;
+            box-shadow: 0 0 10px rgba(0, 0, 0, 0.1);
+        }
+
+        label {
+            display: block;
+            margin-bottom: 10px;
+            font-weight: bold;
+        }
+
+        .dimension-option {
+            display: flex;
+            align-items: center;
+            margin-bottom: 10px;
+        }
+
+        input[type="checkbox"] {
+            margin-right: 10px;
+        }
+
+        button {
+            background-color: #007bff;
+            color: #fff;
+            padding: 10px 20px;
+            border: none;
+            border-radius: 4px;
+            cursor: pointer;
+            font-size: 16px;
+        }
+
+            button:hover {
+                background-color: #0056b3;
+            }
+
+        #reportContainer {
+            margin-top: 20px;
+            text-align: center;
+        }
+
+            #reportContainer h2 {
+                color: #007bff;
+            }
+
+            #reportContainer p {
+                margin-bottom: 10px;
+            }
+    </style>
+</head>
+<body>
+
+    <h1>Statistics Collection</h1>
+
+    <form id="statsForm">
+        <label for="dimensions">Choose dimensions:</label>
+        <div id="dimensionsContainer">
+            <div class="dimension-option">
+                <input type="checkbox" id="URL" value="URL">
+                <label for="URL">URL</label>
+            </div>
+            <div class="dimension-option">
+                <input type="checkbox" id="SourceIP" value="SourceIP">
+                <label for="SourceIP">SourceIP</label>
+            </div>
+            <div class="dimension-option">
+                <input type="checkbox" id="TimeInterval" value="TimeInterval">
+                <label for="TimeInterval">TimeInterval</label>
+            </div>
+        </div>
+
+        <button type="button" onclick="generateReport()">Generate Report</button>
+    </form>
+
+    <script>
+        function generateReport() {
+            // Get selected dimensions
+            const selectedDimensions = Array.from(document.querySelectorAll('#dimensionsContainer input[type="checkbox"]:checked')).map(checkbox => checkbox.value);
+
+            // Form JSON request
+            const request = {
+                Dimensions: selectedDimensions
+            };
+
+            // Make a POST request to the server
+            fetch('/report', {
+                method: 'POST',
+                headers: {
+                    'Content-Type': 'application/json',
+                },
+                body: JSON.stringify(request),
+            })
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    if (data.success) {
+                        console.log('Report data:', data.data);
+
+                        // Redirect to the report page
+                        window.location.href = '/show_report';
+                    } else {
+                        console.error('Error:', data.message);
+                    }
+                })
+                .catch(error => {
+                    console.error('Error:', error);
+                });
+        }
+    </script>
+
+</body>
+</html>
