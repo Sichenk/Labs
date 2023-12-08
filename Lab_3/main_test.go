@@ -5,33 +5,6 @@ import (
 	"testing"
 )
 
-const SIZE = 901
-
-type Stack struct {
-	elements [SIZE]string
-	top      int
-}
-
-func (s *Stack) SPUSH(value string) error {
-	if s.top < SIZE-1 {
-		s.top++
-		s.elements[s.top] = value
-		return nil
-	}
-	return fmt.Errorf("Stack is full")
-}
-
-func (s *Stack) SPOP() (string, error) {
-	if s.top == -1 {
-		return "", fmt.Errorf("Stack is empty")
-	}
-
-	value := s.elements[s.top]
-	s.elements[s.top] = ""
-	s.top--
-	return value, nil
-}
-
 func TestStackSPUSH(t *testing.T) {
 	var stack Stack
 
@@ -78,4 +51,52 @@ func TestStackSPOP(t *testing.T) {
 			}
 		})
 	}
+}
+
+func TestStackSPOPWithEmptyStack(t *testing.T) {
+	var stack Stack
+
+	t.Run("PopFromEmptyStack", func(t *testing.T) {
+		_, err := stack.SPOP()
+		if err != nil {
+			t.Error("Expected SPOP to fail with empty stack, but got no error")
+		}
+	})
+}
+
+func TestStackSPUSHFullStack(t *testing.T) {
+	var stack Stack
+
+	// Заполняем стек
+	for i := 0; i < SIZE; i++ {
+		stack.SPUSH(fmt.Sprintf("value%d", i+1))
+	}
+
+	t.Run("PushToFullStack", func(t *testing.T) {
+		err := stack.SPUSH("extraValue")
+		if err == nil {
+			t.Error("Expected SPUSH to fail with full stack, but got no error")
+		}
+	})
+}
+
+func TestStackSPUSHAfterSPOP(t *testing.T) {
+	var stack Stack
+
+	// Заполняем стек
+	for i := 0; i < SIZE; i++ {
+		stack.SPUSH(fmt.Sprintf("value%d", i+1))
+	}
+
+	// Извлекаем все значения
+	for i := SIZE - 1; i >= 0; i-- {
+		stack.SPOP()
+	}
+
+	t.Run("PushAfterSPOP", func(t *testing.T) {
+		err := stack.SPUSH("newValue")
+		if err != nil {
+			t.Errorf("Expected SPUSH to succeed, but got error: %v", err)
+		}
+	})
 }
