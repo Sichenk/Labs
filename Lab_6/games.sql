@@ -1,5 +1,3 @@
--- Active: 1694931223525@@127.0.0.1@3306@games
-
 CREATE TABLE Games (
     GameID INT PRIMARY KEY,
     Title VARCHAR(200) NOT NULL,
@@ -11,7 +9,7 @@ CREATE TABLE Developers (
     DeveloperID INT PRIMARY KEY,
     DeveloperName VARCHAR(100) NOT NULL,
     HeadquartersLocation VARCHAR(100)
-),
+);
 CREATE TABLE GameDevelopers (
     GameID INT,
     DeveloperID INT,
@@ -73,7 +71,7 @@ VALUES
     (49, 'Persona 5', 'Role-playing', 2016, 'PlayStation 4'),
     (50, 'Subnautica', 'Survival', 2018, 'PC, PlayStation 4, Xbox One');
 
-DELETE FROM Developers;
+DELETE FROM Developers
 
 INSERT INTO Developers (DeveloperID, DeveloperName, HeadquartersLocation)
 VALUES
@@ -115,6 +113,10 @@ VALUES
     (36, 'Unknown Worlds Entertainment', 'San Francisco, California, USA');
 
     DELETE FROM GameDevelopers;
+
+    DELETE FROM userreviews
+    WHERE `UserID` = 225
+
     INSERT INTO GameDevelopers (GameID, DeveloperID)
     VALUES
     (1, 1),   -- The Witcher 3: Wild Hunt (CD Projekt)
@@ -167,3 +169,184 @@ VALUES
     (48, 34), -- Cities: Skylines (Colossal Order)
     (49, 35), -- Persona 5 (Atlus)
     (50, 36); -- Subnautica (Unknown Worlds Entertainment)
+
+CREATE TABLE Graphics (
+    GameID INT,
+    GraphicsQuality VARCHAR(20) NOT NULL,
+    FOREIGN KEY (GameID) REFERENCES Games(GameID)
+);
+
+CREATE TABLE Storage (
+    GameID INT,
+    DiskSpaceGB INT NOT NULL,
+    FOREIGN KEY (GameID) REFERENCES Games(GameID)
+);
+
+DELETE FROM graphics
+
+INSERT INTO Graphics (GameID, GraphicsQuality)
+VALUES
+    (1, 'Ultra'),
+    (2, 'High'),
+    (3, 'High'),
+    (4, 'Epic'),
+    (5, 'Low'),
+    (6, 'Ultra'),
+    (7, 'Epic'),
+    (8, 'Medium'),
+    (9, 'Ultra'),
+    (10, 'Ultra'),
+    (11, 'High'),
+    (12, 'Low'),
+    (13, 'Ultra'),
+    (14, 'Epic'),
+    (15, 'High'),
+    (16, 'Ultra'),
+    (17, 'High'),
+    (18, 'Ultra'),
+    (19, 'Low'),
+    (20, 'Ultra'),
+    (21, 'High'),
+    (22, 'Epic'),
+    (23, 'High'),
+    (24, 'Ultra'),
+    (25, 'Ultra'),
+    (26, 'Medium'),
+    (27, 'Low'),
+    (28, 'High'),
+    (29, 'Ultra'),
+    (30, 'Epic'),
+    (31, 'High'),
+    (32, 'Ultra'),
+    (33, 'Epic'),
+    (34, 'Medium'),
+    (35, 'Low'),
+    (36, 'High'),
+    (37, 'Low'),
+    (38, 'High'),
+    (39, 'Ultra'),
+    (40, 'Ultra'),
+    (41, 'High'),
+    (42, 'Ultra'),
+    (43, 'High'),
+    (44, 'Medium'),
+    (45, 'Low'),
+    (46, 'Ultra'),
+    (47, 'Epic'),
+    (48, 'Medium'),
+    (49, 'High'),
+    (50, 'Low');
+
+INSERT INTO Storage (GameID, DiskSpaceGB)
+VALUES
+    (1, 50),
+    (2, 20),
+    (3, 30),
+    (4, 60),
+    (5, 100),
+    (6, 70),
+    (7, 40),
+    (8, 15),
+    (9, 80),
+    (10, 25),
+    (11, 40),
+    (12, 5),
+    (13, 60),
+    (14, 70),
+    (15, 50),
+    (16, 60),
+    (17, 40),
+    (18, 80),
+    (19, 10),
+    (20, 50),
+    (21, 80),
+    (22, 100),
+    (23, 60),
+    (24, 70),
+    (25, 50),
+    (26, 30),
+    (27, 20),
+    (28, 60),
+    (29, 70),
+    (30, 80),
+    (31, 60),
+    (32, 70),
+    (33, 100),
+    (34, 30),
+    (35, 40),
+    (36, 20),
+    (37, 10),
+    (38, 50),
+    (39, 70),
+    (40, 100),
+    (41, 60),
+    (42, 70),
+    (43, 60),
+    (44, 30),
+    (45, 20),
+    (46, 70),
+    (47, 80),
+    (48, 40),
+    (49, 60),
+    (50, 15);
+
+CREATE TABLE UserReviews (
+    ReviewID INT PRIMARY KEY,
+    GameID INT,
+    UserID INT,
+    Rating INT,
+    FOREIGN KEY (GameID) REFERENCES Games(GameID)
+);
+
+INSERT INTO UserReviews (ReviewID, GameID, UserID, Rating)
+VALUES
+    (1, 10, 201, 4),
+    (2, 7, 202, 3),
+    (3, 15, 203, 5),
+    (4, 4, 204, 4),
+    (5, 28, 205, 2),
+    (6, 12, 206, 5),
+    (7, 33, 207, 3),
+    (8, 22, 208, 4),
+    (9, 18, 209, 5),
+    (10, 49, 210, 3),
+    (11, 9, 211, 4),
+    (12, 41, 212, 2),
+    (13, 35, 213, 5),
+    (14, 2, 214, 3),
+    (15, 46, 215, 4),
+    (16, 13, 216, 5),
+    (17, 20, 217, 4),
+    (18, 6, 218, 3),
+    (19, 32, 219, 2),
+    (20, 24, 220, 5),
+    (21, 5, 221, 4),
+    (22, 19, 222, 3),
+    (23, 43, 223, 5),
+    (24, 11, 224, 4),
+    (25, 30, 225, 2),
+    (26, 36, 201, 5),
+    (27, 48, 202, 3),
+    (28, 3, 203, 4),
+    (29, 14, 204, 5),
+    (30, 25, 205, 2),
+    (31, 31, 206, 4),
+    (32, 37, 207, 3),
+    (33, 42, 208, 5),
+    (34, 27, 209, 4),
+    (35, 8, 210, 3),
+    (36, 45, 211, 2),
+    (37, 26, 212, 5),
+    (38, 38, 213, 4),
+    (39, 1, 214, 3),
+    (40, 44, 215, 2),
+    (41, 16, 216, 5),
+    (42, 23, 217, 4),
+    (43, 50, 218, 3),
+    (44, 21, 219, 4),
+    (45, 29, 220, 5),
+    (46, 39, 221, 3),
+    (47, 34, 222, 4),
+    (48, 40, 223, 2),
+    (49, 47, 224, 5),
+    (50, 17, 225, 4);
