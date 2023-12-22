@@ -4,7 +4,7 @@
 
 using namespace std;
 
-// Базовый класс
+// Р‘Р°Р·РѕРІС‹Р№ РєР»Р°СЃСЃ
 class PeripheralDevice {
 protected:
     int id;
@@ -20,7 +20,7 @@ public:
     virtual void displayInfo() const = 0;
 };
 
-// Класс для наушников
+// РљР»Р°СЃСЃ РґР»СЏ РЅР°СѓС€РЅРёРєРѕРІ
 class Headphones : public PeripheralDevice {
 private:
     string constructionType;
@@ -37,7 +37,7 @@ public:
     }
 };
 
-// Класс для микрофонов
+// РљР»Р°СЃСЃ РґР»СЏ РјРёРєСЂРѕС„РѕРЅРѕРІ
 class Microphone : public PeripheralDevice {
 private:
     int frequencyRange;
@@ -54,7 +54,7 @@ public:
     }
 };
 
-// Класс для клавиатур
+// РљР»Р°СЃСЃ РґР»СЏ РєР»Р°РІРёР°С‚СѓСЂ
 class Keyboard : public PeripheralDevice {
 private:
     string switchType;
@@ -71,13 +71,13 @@ public:
     }
 };
 
-// Фабричный метод для создания периферийных устройств
+// Р¤Р°Р±СЂРёС‡РЅС‹Р№ РјРµС‚РѕРґ РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РїРµСЂРёС„РµСЂРёР№РЅС‹С… СѓСЃС‚СЂРѕР№СЃС‚РІ
 class PeripheralFactory {
 public:
     virtual PeripheralDevice* createPeripheral() = 0;
 };
 
-// Фабрика для создания наушников
+// Р¤Р°Р±СЂРёРєР° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РЅР°СѓС€РЅРёРєРѕРІ
 class HeadphonesFactory : public PeripheralFactory {
 private:
     int id = 0;
@@ -102,7 +102,7 @@ public:
     }
 };
 
-// Фабрика для создания микрофонов
+// Р¤Р°Р±СЂРёРєР° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РјРёРєСЂРѕС„РѕРЅРѕРІ
 class MicrophoneFactory : public PeripheralFactory {
 private:
     int id = 0, frequencyRange = 0, sensitivity = 0;
@@ -127,7 +127,7 @@ public:
     }
 };
 
-// Фабрика для создания клавиатур
+// Р¤Р°Р±СЂРёРєР° РґР»СЏ СЃРѕР·РґР°РЅРёСЏ РєР»Р°РІРёР°С‚СѓСЂ
 class KeyboardFactory : public PeripheralFactory {
 private:
     int id = 0;
@@ -153,7 +153,7 @@ public:
 };
 
 int main() {
-    // Создаем фабрики
+    // РЎРѕР·РґР°РµРј С„Р°Р±СЂРёРєРё
     HeadphonesFactory headphonesFactory;
     MicrophoneFactory microphoneFactory;
     KeyboardFactory keyboardFactory;
@@ -168,24 +168,24 @@ int main() {
         cin >> choice;
 
         switch (choice) {
-            // Добавить устройство
+            // Р”РѕР±Р°РІРёС‚СЊ СѓСЃС‚СЂРѕР№СЃС‚РІРѕ
         case 1:
             int chosen_number;
             cout << "<1> Headphones" << endl << "<2> Microphone" << endl << "<3> Keyboard" << endl;
             cout << "Enter the device number: ";
             cin >> chosen_number;
             switch (chosen_number) {
-                // Выбраны наушники
+                // Р’С‹Р±СЂР°РЅС‹ РЅР°СѓС€РЅРёРєРё
             case 1:
                 devices.push_back(headphonesFactory.createPeripheral());
                 break;
 
-                // Выбран микрофон
+                // Р’С‹Р±СЂР°РЅ РјРёРєСЂРѕС„РѕРЅ
             case 2:
                 devices.push_back(microphoneFactory.createPeripheral());
                 break;
 
-                // Выбрана клавиатура
+                // Р’С‹Р±СЂР°РЅР° РєР»Р°РІРёР°С‚СѓСЂР°
             case 3:
                 devices.push_back(keyboardFactory.createPeripheral());
                 break;
@@ -196,7 +196,7 @@ int main() {
             }
             break;
 
-            // Вывести все устройства
+            // Р’С‹РІРµСЃС‚Рё РІСЃРµ СѓСЃС‚СЂРѕР№СЃС‚РІР°
         case 2:
             cout << "List of all devices:" << endl;
             for (const auto& device : devices) {
@@ -205,7 +205,7 @@ int main() {
             cout << endl;
             break;
 
-            // Вывести информацию о конкретном устройстве
+            // Р’С‹РІРµСЃС‚Рё РёРЅС„РѕСЂРјР°С†РёСЋ Рѕ РєРѕРЅРєСЂРµС‚РЅРѕРј СѓСЃС‚СЂРѕР№СЃС‚РІРµ
         case 3:
             int deviceIndex;
             cout << "Enter the index of the device: ";
@@ -220,7 +220,7 @@ int main() {
             }
             break;
 
-            // Выход
+            // Р’С‹С…РѕРґ
         case -1:
             for (const auto& device : devices) {
                 delete device;
