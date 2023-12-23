@@ -1,6 +1,7 @@
 #include <iostream>
 #include <string>
 #include <vector>
+#include <map>
 
 using namespace std;
 
@@ -74,20 +75,17 @@ public:
 // Фабричный метод для создания периферийных устройств
 class PeripheralFactory {
 public:
-    virtual PeripheralDevice* createPeripheral() = 0;
+    virtual PeripheralDevice* createPeripheral(int id) = 0;
 };
 
 // Фабрика для создания наушников
 class HeadphonesFactory : public PeripheralFactory {
 private:
-    int id = 0;
     string brand, constructionType, mountingMethod;
     double price = 0;
 
 public:
-    PeripheralDevice* createPeripheral() override {
-        cout << "Enter the ID for the headphones: ";
-        cin >> id;
+    PeripheralDevice* createPeripheral(int id) override {
         cout << "Enter the brand for the headphones: ";
         cin.ignore();
         getline(cin, brand);
@@ -105,14 +103,12 @@ public:
 // Фабрика для создания микрофонов
 class MicrophoneFactory : public PeripheralFactory {
 private:
-    int id = 0, frequencyRange = 0, sensitivity = 0;
     string brand;
+    int frequencyRange = 0, sensitivity = 0;
     double price = 0;
 
 public:
-    PeripheralDevice* createPeripheral() override {
-        cout << "Enter the ID for the microphone: ";
-        cin >> id;
+    PeripheralDevice* createPeripheral(int id) override {
         cout << "Enter the brand for the microphone: ";
         cin.ignore();
         getline(cin, brand);
@@ -130,14 +126,11 @@ public:
 // Фабрика для создания клавиатур
 class KeyboardFactory : public PeripheralFactory {
 private:
-    int id = 0;
     string brand, switchType, interface;
     double price = 0;
 
 public:
-    PeripheralDevice* createPeripheral() override {
-        cout << "Enter the ID for the keyboard: ";
-        cin >> id;
+    PeripheralDevice* createPeripheral(int id) override {
         cout << "Enter the brand for the keyboard: ";
         cin.ignore();
         getline(cin, brand);
@@ -158,7 +151,7 @@ int main() {
     MicrophoneFactory microphoneFactory;
     KeyboardFactory keyboardFactory;
 
-    vector<PeripheralDevice*> devices;
+    map<int, PeripheralDevice*> devicesMap;
 
     while (true) {
         int choice = 0;
@@ -174,20 +167,32 @@ int main() {
             cout << "<1> Headphones" << endl << "<2> Microphone" << endl << "<3> Keyboard" << endl;
             cout << "Enter the device number: ";
             cin >> chosen_number;
+
+            // Вводим ID устройства
+            int deviceId;
+            cout << "Enter the ID for the device: ";
+            cin >> deviceId;
+
+            // Проверяем, есть ли устройство с таким же ID
+            if (devicesMap.find(deviceId) != devicesMap.end()) {
+                cout << "Device with ID " << deviceId << " already exists." << endl;
+                break;
+            }
+
             switch (chosen_number) {
                 // Выбраны наушники
             case 1:
-                devices.push_back(headphonesFactory.createPeripheral());
+                devicesMap[deviceId] = headphonesFactory.createPeripheral(deviceId);
                 break;
 
                 // Выбран микрофон
             case 2:
-                devices.push_back(microphoneFactory.createPeripheral());
+                devicesMap[deviceId] = microphoneFactory.createPeripheral(deviceId);
                 break;
 
                 // Выбрана клавиатура
             case 3:
-                devices.push_back(keyboardFactory.createPeripheral());
+                devicesMap[deviceId] = keyboardFactory.createPeripheral(deviceId);
                 break;
 
             default:
@@ -199,8 +204,8 @@ int main() {
             // Вывести все устройства
         case 2:
             cout << "List of all devices:" << endl;
-            for (const auto& device : devices) {
-                device->displayInfo();
+            for (const auto& device : devicesMap) {
+                device.second->displayInfo();
             }
             cout << endl;
             break;
@@ -208,22 +213,23 @@ int main() {
             // Вывести информацию о конкретном устройстве
         case 3:
             int deviceIndex;
-            cout << "Enter the index of the device: ";
+            cout << "Enter the ID of the device: ";
             cin >> deviceIndex;
-            if (deviceIndex >= 0 && deviceIndex < devices.size()) {
-                devices[deviceIndex]->displayInfo();
+            if (devicesMap.find(deviceIndex) != devicesMap.end()) {
+                devicesMap[deviceIndex]->displayInfo();
                 cout << endl;
             }
             else {
-                cout << "Invalid index." << endl;
+                cout << "Device with ID " << deviceIndex << " not found." << endl;
                 cout << endl;
             }
             break;
 
             // Выход
         case -1:
-            for (const auto& device : devices) {
-                delete device;
+            // Освобождаем память
+            for (const auto& device : devicesMap) {
+                delete device.second;
             }
             return 0;
             break;
